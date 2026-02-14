@@ -1,0 +1,8 @@
+node_modules/
+target/
+.git/
+.idea/
+npm-debug.log
+.env.local
+.DS_Store
+*.log

@@ -3,14 +3,17 @@ import { getMetrics } from '../services/api';
 
 export default function MetricsDashboard() {
   const [metrics, setMetrics] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchMetrics = async () => {
       try {
         const res = await getMetrics();
         setMetrics(res.data);
+        setError(null);
       } catch (err) {
         console.error("Failed to fetch metrics", err);
+        setError(err.message || "Failed to fetch metrics");
       }
     };
 
@@ -19,6 +22,7 @@ export default function MetricsDashboard() {
     return () => clearInterval(interval);
   }, []);
 
+  if (error) return <p className="text-center mt-8 text-red-600">Error: {error}</p>;
   if (!metrics) return <p className="text-center mt-8">Loading metrics...</p>;
 
   const { disk, memory, cpu, network, uptime } = metrics;

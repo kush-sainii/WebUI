@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./WebUI
+      dockerfile: Dockerfile
+    container_name: webui-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_APPLICATION_NAME=WebUI
+      - PORT=8080
+    networks:
+      - webui-network
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: webui-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://backend:8080
+    depends_on:
+      - backend
+    networks:
+      - webui-network
+    restart: unless-stopped
+
+networks:
+  webui-network:
+    driver: bridge
